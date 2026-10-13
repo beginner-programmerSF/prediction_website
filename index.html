@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prediction Hub - Pro Platform</title>
+    <title>Prediction Hub - Sports Predictor</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,26 +13,139 @@
 </head>
 <body class="bg-gray-900 text-gray-100 min-h-screen flex flex-col justify-between">
 
-    <!-- ================= AUTHENTICATION SECTION (Login / Register) ================= -->
-    <div id="auth-container" class="fixed inset-0 bg-gray-900 flex justify-center items-center z-50 p-4">
-        <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 max-w-md w-full shadow-2xl space-y-6">
+    <!-- Top Header / Navigation Bar (Like Reference) -->
+    <header class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center sticky top-0 z-40">
+        <div class="flex items-center gap-8">
+            <h1 class="text-xl font-bold tracking-wider text-indigo-400">PREDICTION HUB</h1>
+            <nav class="hidden md:flex gap-6 text-sm text-gray-300 font-medium">
+                <a href="#" class="hover:text-indigo-400 transition">Tournaments</a>
+                <a href="#" class="hover:text-indigo-400 transition">News</a>
+                <a href="#" class="hover:text-indigo-400 transition">Apps</a>
+                <a href="#" class="hover:text-indigo-400 transition">About</a>
+            </nav>
+        </div>
+
+        <!-- Right Side: Auth / User Profile & Balance -->
+        <div class="flex items-center gap-4">
+            <div id="user-info-section" class="hidden flex items-center gap-3 bg-gray-700 px-4 py-1.5 rounded-full border border-gray-600">
+                <span id="nav-username" class="font-semibold text-sm text-indigo-300">User</span>
+                <div class="border-l border-gray-500 h-4 mx-1"></div>
+                <span class="text-yellow-400 font-semibold text-sm">🪙 <span id="user-balance">100</span> Coins</span>
+                <button onclick="handleLogout()" class="ml-2 text-xs bg-red-600 hover:bg-red-700 px-2.5 py-1 rounded text-white font-semibold transition">Logout</button>
+            </div>
+            
+            <button id="login-trigger-btn" onclick="openAuthModal('login')" class="bg-red-600 hover:bg-red-700 text-white px-5 py-2 rounded-lg font-bold text-sm tracking-wide transition flex items-center gap-2 shadow-md">
+                LOG IN <span class="text-xs">➔</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Banner Section (Clean Text-Based, No Background Image) -->
+    <section class="bg-gray-850 py-16 px-6 text-center border-b border-gray-800 bg-gradient-to-b from-gray-800 to-gray-900">
+        <div class="max-w-4xl mx-auto space-y-4">
+            <div class="inline-block bg-indigo-900 text-indigo-300 text-xs px-3 py-1 rounded-full font-semibold tracking-wider uppercase">
+                Official Prediction Platform
+            </div>
+            <h2 class="text-4xl md:text-5xl font-extrabold tracking-tight text-white">
+                SPORTS PREDICTOR & FANTASY GAMES
+            </h2>
+            <p class="text-gray-400 text-sm md:text-base">
+                Played by <span class="text-yellow-400 font-bold text-lg">2,895,272</span> sports fans worldwide
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Content Area: Popular Games / Predictions Today -->
+    <main class="max-w-6xl mx-auto p-6 flex-1 w-full space-y-6">
+        <h3 class="text-xl font-bold border-b border-gray-800 pb-2 text-gray-200">Popular Games Today</h3>
+
+        <!-- Prediction Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            
+            <!-- Card 1: Cricket -->
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs bg-indigo-900 text-indigo-300 px-2.5 py-1 rounded font-semibold">T20 Cricket</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">Bangladesh vs Australia</h4>
+                    <p class="text-xs text-gray-400 mb-4">Predict the winner of the match. Closer your pick, more points you earn!</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 mt-4">
+                    <button onclick="openConfirmModal('Bangladesh Win', 2)" class="bg-gray-700 hover:bg-indigo-600 p-2.5 rounded text-xs font-semibold text-center transition border border-gray-600">
+                        Bangladesh (2x)
+                    </button>
+                    <button onclick="openConfirmModal('Australia Win', 2)" class="bg-gray-700 hover:bg-indigo-600 p-2.5 rounded text-xs font-semibold text-center transition border border-gray-600">
+                        Australia (2x)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Football (3 Options) -->
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg flex flex-col justify-between">
+                <div>
+                    <div class="flex justify-between items-center mb-2">
+                        <span class="text-xs bg-green-900 text-green-300 px-2.5 py-1 rounded font-semibold">Football League</span>
+                    </div>
+                    <h4 class="text-lg font-bold text-white mb-2">Real Madrid vs Barcelona</h4>
+                    <p class="text-xs text-gray-400 mb-4">Select final match outcome carefully to win high multiplier rewards.</p>
+                </div>
+                <div class="grid grid-cols-3 gap-1.5 mt-4">
+                    <button onclick="openConfirmModal('Real Madrid Win', 2)" class="bg-gray-700 hover:bg-green-600 p-2 rounded text-xs font-semibold text-center transition border border-gray-600">Real (2x)</button>
+                    <button onclick="openConfirmModal('Match Draw', 5)" class="bg-gray-700 hover:bg-yellow-600 p-2 rounded text-xs font-semibold text-center transition border border-gray-600">Draw (5x)</button>
+                    <button onclick="openConfirmModal('Barcelona Win', 2)" class="bg-gray-700 hover:bg-green-600 p-2 rounded text-xs font-semibold text-center transition border border-gray-600">Barca (2x)</button>
+                </div>
+            </div>
+
+            <!-- Card 3: User Prediction History Panel -->
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+                <h4 class="text-sm font-bold text-gray-200 border-b border-gray-700 pb-2 mb-3">My Prediction History</h4>
+                <div class="space-y-3 text-xs">
+                    <div>
+                        <span class="text-yellow-400 font-semibold">Pending:</span>
+                        <div id="pending-list" class="mt-1 space-y-1 text-gray-300">
+                            <p class="text-gray-500 italic">No pending predictions.</p>
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <span class="text-green-400 font-semibold">Completed:</span>
+                        <div id="completed-list" class="mt-1 space-y-1 text-gray-300">
+                            <p class="text-gray-500 italic">No history available.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 border-t border-gray-700 text-center py-4 text-xs text-gray-400">
+        <p>&copy; 2026 Prediction Hub. All rights reserved.</p>
+    </footer>
+
+    <!-- Auth Modal (Login / Register) -->
+    <div id="auth-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50 p-4">
+        <div class="bg-gray-800 p-8 rounded-2xl border border-gray-700 max-w-md w-full shadow-2xl space-y-6 relative">
+            <button onclick="closeAuthModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white font-bold text-lg">✕</button>
+            
             <div class="text-center">
-                <h2 id="auth-title" class="text-2xl font-bold text-indigo-400">Welcome to Prediction Hub</h2>
-                <p id="auth-subtitle" class="text-sm text-gray-400 mt-1">Please login to your account</p>
+                <h3 id="auth-title" class="text-2xl font-bold text-indigo-400">Welcome Back</h3>
+                <p id="auth-subtitle" class="text-sm text-gray-400 mt-1">Login to your account</p>
             </div>
 
             <!-- Login Form -->
             <form id="login-form" onsubmit="handleLogin(event)" class="space-y-4">
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
-                    <input type="email" id="login-email" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-gray-300 mb-1 uppercase tracking-wider">Email Address</label>
+                    <input type="email" id="login-email" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                    <input type="password" id="login-password" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-gray-300 mb-1 uppercase tracking-wider">Password</label>
+                    <input type="password" id="login-password" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
-                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-3 rounded-lg font-semibold transition">Login</button>
-                <p class="text-center text-sm text-gray-400 mt-4">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-2.5 rounded-lg font-semibold text-sm transition">Login</button>
+                <p class="text-center text-xs text-gray-400">
                     Don't have an account? <span onclick="switchToRegister()" class="text-indigo-400 cursor-pointer hover:underline font-semibold">Register here</span>
                 </p>
             </form>
@@ -40,128 +153,66 @@
             <!-- Register Form (Hidden by default) -->
             <form id="register-form" onsubmit="handleRegister(event)" class="space-y-4 hidden">
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Full Name</label>
-                    <input type="text" id="reg-name" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-gray-300 mb-1 uppercase tracking-wider">Full Name</label>
+                    <input type="text" id="reg-name" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Email Address</label>
-                    <input type="email" id="reg-email" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-gray-300 mb-1 uppercase tracking-wider">Email Address</label>
+                    <input type="email" id="reg-email" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-1">Password</label>
-                    <input type="password" id="reg-password" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-indigo-500">
+                    <label class="block text-xs font-medium text-gray-300 mb-1 uppercase tracking-wider">Password</label>
+                    <input type="password" id="reg-password" required class="w-full bg-gray-700 border border-gray-600 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
                 </div>
-                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-3 rounded-lg font-semibold transition">Register & Done</button>
-                <p class="text-center text-sm text-gray-400 mt-4">
+                <button type="submit" class="w-full bg-green-600 hover:bg-green-700 py-2.5 rounded-lg font-semibold text-sm transition">Register & Done</button>
+                <p class="text-center text-xs text-gray-400">
                     Already have an account? <span onclick="switchToLogin()" class="text-indigo-400 cursor-pointer hover:underline font-semibold">Login here</span>
                 </p>
             </form>
         </div>
     </div>
 
-    <!-- ================= MAIN WEBSITE APP (Hidden until logged in) ================= -->
-    <div id="main-app" class="hidden flex-1 flex flex-col">
-        <!-- Navigation Bar -->
-        <nav class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-indigo-400">🎯 Prediction Hub</h1>
-            <div class="flex items-center gap-4">
-                <!-- User Profile & Balance -->
-                <div class="flex items-center gap-3 bg-gray-700 px-4 py-1.5 rounded-full border border-gray-600">
-                    <span id="nav-username" class="font-semibold text-sm text-indigo-300">User</span>
-                    <div class="border-l border-gray-500 h-4 mx-1"></div>
-                    <span class="text-yellow-400 font-semibold text-sm">🪙 <span id="user-balance">100</span> Coins</span>
-                </div>
-                <button onclick="handleLogout()" class="bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold text-sm transition">Logout</button>
-            </div>
-        </nav>
-
-        <!-- Main Content Area -->
-        <main class="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6 flex-1 w-full">
-            
-            <!-- Live Matches & Predictions (2 Columns) -->
-            <div class="md:col-span-2 space-y-6">
-                <h2 class="text-xl font-bold border-b border-gray-700 pb-2">Active Predictions</h2>
-                
-                <!-- Cricket Match Card -->
-                <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
-                    <span class="text-xs bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full font-semibold">T20 Cricket</span>
-                    <h3 class="text-lg font-bold mt-2">Bangladesh vs Australia</h3>
-                    <p class="text-sm text-gray-400 mb-4">Who will win this match?</p>
-                    
-                    <div class="grid grid-cols-2 gap-3">
-                        <button onclick="openConfirmModal('Bangladesh Win', 2)" class="bg-gray-700 hover:bg-indigo-600 p-3 rounded-lg text-center transition font-semibold border border-gray-600">
-                            Bangladesh (Reward: 2x)
-                        </button>
-                        <button onclick="openConfirmModal('Australia Win', 2)" class="bg-gray-700 hover:bg-indigo-600 p-3 rounded-lg text-center transition font-semibold border border-gray-600">
-                            Australia (Reward: 2x)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Football Match Card -->
-                <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
-                    <span class="text-xs bg-green-900 text-green-300 px-3 py-1 rounded-full font-semibold">Football Match</span>
-                    <h3 class="text-lg font-bold mt-2">Real Madrid vs Barcelona</h3>
-                    <p class="text-sm text-gray-400 mb-4">Select match outcome:</p>
-                    
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="openConfirmModal('Real Madrid Win', 2)" class="bg-gray-700 hover:bg-green-600 p-3 rounded-lg text-center transition font-semibold text-sm border border-gray-600">Real Win (2x)</button>
-                        <button onclick="openConfirmModal('Match Draw', 5)" class="bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg text-center transition font-semibold text-sm border border-gray-600">Draw (5x)</button>
-                        <button onclick="openConfirmModal('Barcelona Win', 2)" class="bg-gray-700 hover:bg-green-600 p-3 rounded-lg text-center transition font-semibold text-sm border border-gray-600">Barca Win (2x)</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- User Dashboard & History (1 Column) -->
-            <div class="space-y-6">
-                <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
-                    <h3 class="text-lg font-bold border-b border-gray-700 pb-2 mb-4">My Prediction History</h3>
-                    
-                    <div class="space-y-3">
-                        <h4 class="text-sm font-semibold text-yellow-400">Pending Predictions</h4>
-                        <div id="pending-list" class="space-y-2 text-sm text-gray-300">
-                            <p class="text-gray-500 italic">No pending predictions.</p>
-                        </div>
-
-                        <h4 class="text-sm font-semibold text-green-400 mt-4">Completed History</h4>
-                        <div id="completed-list" class="space-y-2 text-sm text-gray-300">
-                            <p class="text-gray-500 italic">No history available.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
     <!-- Confirmation Popup Modal -->
-    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50">
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50 p-4">
         <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 max-w-sm w-full text-center space-y-4 shadow-2xl">
-            <h3 class="text-xl font-bold text-indigo-400">Confirm Prediction</h3>
-            <p id="modal-text" class="text-gray-300 text-sm">Are you sure you want to submit this prediction?</p>
+            <h3 class="text-lg font-bold text-indigo-400">Confirm Prediction</h3>
+            <p id="modal-text" class="text-gray-300 text-xs">Are you sure you want to submit this prediction?</p>
             <div class="flex justify-center gap-3 pt-2">
-                <button onclick="closeConfirmModal()" class="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg font-semibold w-full transition">Cancel</button>
-                <button onclick="confirmPrediction()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold w-full transition">Confirm</button>
+                <button onclick="closeConfirmModal()" class="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg font-semibold text-xs w-full transition">Cancel</button>
+                <button onclick="confirmPrediction()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold text-xs w-full transition">Confirm</button>
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Application Logic -->
+    <!-- JavaScript Logic -->
     <script>
         let selectedChoice = "";
         let selectedReward = 0;
 
-        // Check if user is already logged in on page load
         window.onload = function() {
             const currentUser = localStorage.getItem('currentUser');
             if(currentUser) {
-                showMainApp(JSON.parse(currentUser));
+                updateUIAfterLogin(JSON.parse(currentUser));
             }
+        }
+
+        function openAuthModal(mode) {
+            document.getElementById('auth-modal').classList.remove('hidden');
+            if(mode === 'register') {
+                switchToRegister();
+            } else {
+                switchToLogin();
+            }
+        }
+
+        function closeAuthModal() {
+            document.getElementById('auth-modal').classList.add('hidden');
         }
 
         function switchToRegister() {
             document.getElementById('login-form').classList.add('hidden');
             document.getElementById('register-form').classList.remove('hidden');
-            document.getElementById('auth-title').innerText = "Create an Account";
+            document.getElementById('auth-title').innerText = "Create Account";
             document.getElementById('auth-subtitle').innerText = "Register with name, email & password";
         }
 
@@ -169,26 +220,24 @@
             document.getElementById('register-form').classList.add('hidden');
             document.getElementById('login-form').classList.remove('hidden');
             document.getElementById('auth-title').innerText = "Welcome Back";
-            document.getElementById('auth-subtitle').innerText = "Please login to your account";
+            document.getElementById('auth-subtitle').innerText = "Login to your account";
         }
 
-        // Handle Registration
         function handleRegister(event) {
             event.preventDefault();
             const name = document.getElementById('reg-name').value;
             const email = document.getElementById('reg-email').value;
             const password = document.getElementById('reg-password').value;
 
-            // Save user info in localStorage
             const userData = { name, email, password, balance: 100 };
             localStorage.setItem('registeredUser', JSON.stringify(userData));
             localStorage.setItem('currentUser', JSON.stringify(userData));
 
-            alert("Registration successful! Welcome to your dashboard.");
-            showMainApp(userData);
+            closeAuthModal();
+            updateUIAfterLogin(userData);
+            alert("Registration successful! Welcome to your profile.");
         }
 
-        // Handle Login
         function handleLogin(event) {
             event.preventDefault();
             const email = document.getElementById('login-email').value;
@@ -198,36 +247,42 @@
 
             if(savedUser && savedUser.email === email && savedUser.password === password) {
                 localStorage.setItem('currentUser', JSON.stringify(savedUser));
+                closeAuthModal();
+                updateUIAfterLogin(savedUser);
                 alert("Login successful!");
-                showMainApp(savedUser);
             } else {
-                // If no registered user found, allow quick demo login or show error
                 if(!savedUser) {
-                    // Create a default user on the fly if nothing is registered yet
-                    const demoUser = { name: "KaziShipan", email: email, balance: 100 };
+                    const demoUser = { name: "User", email: email, balance: 100 };
                     localStorage.setItem('currentUser', JSON.stringify(demoUser));
-                    showMainApp(demoUser);
+                    closeAuthModal();
+                    updateUIAfterLogin(demoUser);
                 } else {
-                    alert("Invalid email or password! Please check or register first.");
+                    alert("Invalid email or password!");
                 }
             }
         }
 
-        function showMainApp(user) {
-            document.getElementById('auth-container').classList.add('hidden');
-            document.getElementById('main-app').classList.remove('hidden');
+        function updateUIAfterLogin(user) {
+            document.getElementById('login-trigger-btn').classList.add('hidden');
+            document.getElementById('user-info-section').classList.remove('hidden');
             document.getElementById('nav-username').innerText = user.name;
             document.getElementById('user-balance').innerText = user.balance || 100;
         }
 
         function handleLogout() {
             localStorage.removeItem('currentUser');
-            document.getElementById('main-app').classList.add('hidden');
-            document.getElementById('auth-container').classList.remove('hidden');
-            switchToLogin();
+            document.getElementById('user-info-section').classList.add('hidden');
+            document.getElementById('login-trigger-btn').classList.remove('hidden');
+            alert("Logged out successfully.");
         }
 
         function openConfirmModal(choice, reward) {
+            const currentUser = localStorage.getItem('currentUser');
+            if(!currentUser) {
+                alert("Please login first to place a prediction!");
+                openAuthModal('login');
+                return;
+            }
             selectedChoice = choice;
             selectedReward = reward;
             document.getElementById('modal-text').innerText = `Do you want to confirm your prediction for "${choice}"? (Reward Multiplier: ${reward}x)`;
@@ -247,25 +302,23 @@
             }
 
             const item = document.createElement('div');
-            item.className = "bg-gray-700 p-3 rounded-lg border border-gray-600 flex justify-between items-center";
-            item.innerHTML = `<span>Pick: <b>${selectedChoice}</b></span> <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Pending</span>`;
+            item.className = "bg-gray-700 p-2 rounded flex justify-between items-center text-xs";
+            item.innerHTML = `<span>Pick: <b>${selectedChoice}</b></span> <span class="bg-yellow-600 text-white px-1.5 py-0.5 rounded text-[10px]">Pending</span>`;
             pendingList.appendChild(item);
 
-            // Deduct entry stake (e.g. 10 coins)
             let balanceElem = document.getElementById('user-balance');
             let currentBalance = parseInt(balanceElem.innerText);
             if(currentBalance >= 10) {
                 currentBalance -= 10;
                 balanceElem.innerText = currentBalance;
                 
-                // Update localStorage user balance
                 let currentUser = JSON.parse(localStorage.getItem('currentUser'));
                 currentUser.balance = currentBalance;
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
 
-                alert("Your prediction has been successfully submitted to your pending list!");
+                alert("Prediction submitted successfully!");
             } else {
-                alert("You do not have enough coins in your balance!");
+                alert("You do not have enough coins!");
             }
         }
     </script>
