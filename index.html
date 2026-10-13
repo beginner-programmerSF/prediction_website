@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Hub - Pro Platform</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+
+    <!-- Navigation Bar -->
+    <nav class="bg-gray-800 border-b border-gray-700 px-6 py-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-indigo-400">🎯 Prediction Hub</h1>
+        <div class="flex items-center gap-4">
+            <!-- Balance Counter (No Deposit System) -->
+            <div class="bg-gray-700 px-4 py-2 rounded-full border border-yellow-500 flex items-center gap-2">
+                <span class="text-yellow-400 font-semibold">🪙 Balance:</span>
+                <span id="user-balance" class="font-bold text-white">100</span> Coins
+            </div>
+            <button onclick="toggleAuthModal()" id="auth-btn" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold transition">Login / Register</button>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="max-w-5xl mx-auto p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Live Matches & Predictions (2 Columns) -->
+        <div class="md:col-span-2 space-y-6">
+            <h2 class="text-xl font-bold border-b border-gray-700 pb-2">Active Predictions</h2>
+            
+            <!-- Cricket Match Card (2 Options) -->
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+                <span class="text-xs bg-indigo-900 text-indigo-300 px-3 py-1 rounded-full font-semibold">T20 Cricket</span>
+                <h3 class="text-lg font-bold mt-2">Bangladesh vs Australia</h3>
+                <p class="text-sm text-gray-400 mb-4">Who will win this match?</p>
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <button onclick="openConfirmModal('Bangladesh Win', 2)" class="bg-gray-700 hover:bg-indigo-600 p-3 rounded-lg text-center transition font-semibold border border-gray-600">
+                        Bangladesh (Reward: 2x)
+                    </button>
+                    <button onclick="openConfirmModal('Australia Win', 2)" class="bg-gray-700 hover:bg-indigo-600 p-3 rounded-lg text-center transition font-semibold border border-gray-600">
+                        Australia (Reward: 2x)
+                    </button>
+                </div>
+            </div>
+
+            <!-- Football Match Card (3 Options) -->
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+                <span class="text-xs bg-green-900 text-green-300 px-3 py-1 rounded-full font-semibold">Football Match</span>
+                <h3 class="text-lg font-bold mt-2">Real Madrid vs Barcelona</h3>
+                <p class="text-sm text-gray-400 mb-4">Select match outcome:</p>
+                
+                <div class="grid grid-cols-3 gap-2">
+                    <button onclick="openConfirmModal('Real Madrid Win', 2)" class="bg-gray-700 hover:bg-green-600 p-3 rounded-lg text-center transition font-semibold text-sm border border-gray-600">Real Win (2x)</button>
+                    <button onclick="openConfirmModal('Match Draw', 5)" class="bg-gray-700 hover:bg-yellow-600 p-3 rounded-lg text-center transition font-semibold text-sm border border-gray-600">Draw (5x)</button>
+                    <button onclick="openConfirmModal('Barcelona Win', 2)" class="bg-gray-700 hover:bg-green-600 p-3 rounded-lg text-center transition font-semibold text-sm border border-gray-600">Barca Win (2x)</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Dashboard & History (1 Column) -->
+        <div class="space-y-6">
+            <div class="bg-gray-800 p-5 rounded-xl border border-gray-700 shadow-lg">
+                <h3 class="text-lg font-bold border-b border-gray-700 pb-2 mb-4">My Prediction History</h3>
+                
+                <div class="space-y-3">
+                    <h4 class="text-sm font-semibold text-yellow-400">Pending Predictions</h4>
+                    <div id="pending-list" class="space-y-2 text-sm text-gray-300">
+                        <p class="text-gray-500 italic">No pending predictions.</p>
+                    </div>
+
+                    <h4 class="text-sm font-semibold text-green-400 mt-4">Completed History</h4>
+                    <div id="completed-list" class="space-y-2 text-sm text-gray-300">
+                        <p class="text-gray-500 italic">No history available.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Confirmation Popup Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center hidden z-50">
+        <div class="bg-gray-800 p-6 rounded-2xl border border-gray-700 max-w-sm w-full text-center space-y-4 shadow-2xl">
+            <h3 class="text-xl font-bold text-indigo-400">Confirm Prediction</h3>
+            <p id="modal-text" class="text-gray-300 text-sm">Are you sure you want to submit this prediction?</p>
+            <div class="flex justify-center gap-3 pt-2">
+                <button onclick="closeConfirmModal()" class="bg-gray-600 hover:bg-gray-500 px-4 py-2 rounded-lg font-semibold w-full transition">Cancel</button>
+                <button onclick="confirmPrediction()" class="bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold w-full transition">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        let isLoggedIn = false; // False by default, true after login
+        let selectedChoice = "";
+        let selectedReward = 0;
+
+        function toggleAuthModal() {
+            isLoggedIn = !isLoggedIn;
+            const authBtn = document.getElementById('auth-btn');
+            if(isLoggedIn) {
+                authBtn.innerText = "Logout";
+                authBtn.className = "bg-red-600 hover:bg-red-700 px-4 py-2 rounded-lg font-semibold transition";
+                alert("Successfully logged in! You can now place predictions.");
+            } else {
+                authBtn.innerText = "Login / Register";
+                authBtn.className = "bg-indigo-600 hover:bg-indigo-700 px-4 py-2 rounded-lg font-semibold transition";
+                alert("Logged out successfully.");
+            }
+        }
+
+        function openConfirmModal(choice, reward) {
+            if(!isLoggedIn) {
+                alert("Please login first to place a prediction!");
+                return;
+            }
+            selectedChoice = choice;
+            selectedReward = reward;
+            document.getElementById('modal-text').innerText = `Do you want to confirm your prediction for "${choice}"? (Reward Multiplier: ${reward}x)`;
+            document.getElementById('confirm-modal').classList.remove('hidden');
+        }
+
+        function closeConfirmModal() {
+            document.getElementById('confirm-modal').classList.add('hidden');
+        }
+
+        function confirmPrediction() {
+            closeConfirmModal();
+            
+            // Add to pending list
+            const pendingList = document.getElementById('pending-list');
+            if(pendingList.innerHTML.includes('No pending')) {
+                pendingList.innerHTML = "";
+            }
+
+            const item = document.createElement('div');
+            item.className = "bg-gray-700 p-3 rounded-lg border border-gray-600 flex justify-between items-center";
+            item.innerHTML = `<span>Pick: <b>${selectedChoice}</b></span> <span class="text-xs bg-yellow-600 text-white px-2 py-1 rounded">Pending</span>`;
+            pendingList.appendChild(item);
+
+            // Deduct entry fee (e.g., 10 coins stake) from balance
+            let balanceElem = document.getElementById('user-balance');
+            let currentBalance = parseInt(balanceElem.innerText);
+            if(currentBalance >= 10) {
+                currentBalance -= 10;
+                balanceElem.innerText = currentBalance;
+                alert("Your prediction has been successfully submitted to your pending list!");
+            } else {
+                alert("You do not have enough coins in your balance!");
+            }
+        }
+    </script>
+</body>
+</html>
